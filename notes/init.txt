@@ -1,0 +1,21 @@
+How to initialize a Ruby project?
+
+https://www.theodinproject.com/lessons/ruby-project-management#gems-and-you
+
+> bundle init
+> rbenv local 3.5.5
+
+VSCode: ensure the Ruby LSP extension is present
+
+https://www.theodinproject.com/lessons/ruby-linting-and-rubocop
+
+> bundle add rubocop
+> bundle exec rubocop --init
+
+Run once to safely autofix everything in the project:
+
+> bundle exec rubocop -a
+
+Unsafe autofixes:
+
+> bundle exec rubocop -A
