@@ -22,9 +22,10 @@ describe Grid do
 
     context "when a column is empty" do
       it "occupies first space in column" do
-        grid.drop_token(token_color, column)
-        first_column = grid.column(column)
-        expect(first_column).to eq ["red", nil, nil, nil, nil, nil]
+        expect { grid.drop_token(token_color, column) }
+          .to change { grid.column(column) }
+          .from([nil, nil, nil, nil, nil, nil])
+          .to(["red", nil, nil, nil, nil, nil])
       end
     end
 
@@ -36,9 +37,10 @@ describe Grid do
       end
 
       it "occupies second space in column" do
-        grid_with_one_token.drop_token(token_color, column)
-        first_column = grid_with_one_token.column(column)
-        expect(first_column).to eq ["red", "red", nil, nil, nil, nil]
+        expect { grid_with_one_token.drop_token(token_color, column) }
+          .to change { grid_with_one_token.column(column) }
+          .from(["red", nil, nil, nil, nil, nil])
+          .to(["red", "red", nil, nil, nil, nil])
       end
     end
 
@@ -50,15 +52,23 @@ describe Grid do
       end
 
       it "occupies last space in column" do
-        grid_with_five_tokens.drop_token(token_color, column)
-        first_column = grid_with_five_tokens.column(column)
-        expect(first_column).to eq %w[red red red red red red]
+        expect { grid_with_five_tokens.drop_token(token_color, column) }
+          .to change { grid_with_five_tokens.column(column) }
+          .from(["red", "red", "red", "red", "red", nil])
+          .to(%w[red red red red red red])
       end
     end
 
     context "when a column is full" do
-      it "gives an error" do
-        #
+      subject(:grid_with_full_column) do
+        grid = described_class.new
+        6.times { grid.drop_token(token_color, column) }
+        return grid
+      end
+
+      it "does nothing to column" do
+        expect { grid_with_full_column.drop_token(token_color, column) }
+          .not_to(change { grid_with_full_column.column(column) })
       end
     end
   end
