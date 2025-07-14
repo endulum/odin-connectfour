@@ -72,4 +72,38 @@ describe Grid do
       end
     end
   end
+
+  describe "determining if column is full" do
+    column = 0
+
+    context "when column is empty" do
+      it "is not full" do
+        expect(grid.column_full?(0)).to be false
+      end
+    end
+
+    context "when column is nearly full" do
+      subject(:grid_with_partial_column) do
+        grid = described_class.new
+        5.times { grid.drop_token("red", column) }
+        return grid
+      end
+
+      it "is not full" do
+        expect(grid_with_partial_column.column_full?(0)).to be false
+      end
+    end
+
+    context "when column is full" do
+      subject(:grid_with_full_column) do
+        grid = described_class.new
+        6.times { grid.drop_token("red", column) }
+        return grid
+      end
+
+      it "is full" do
+        expect(grid_with_full_column.column_full?(0)).to be true
+      end
+    end
+  end
 end

@@ -9,6 +9,10 @@ class Grid
     @columns[index]
   end
 
+  def column_full?(index)
+    @columns[index].compact.length == @columns[index].length
+  end
+
   def at_space(column_index, column_position)
     @columns[column_index][column_position]
   end
