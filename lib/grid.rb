@@ -37,4 +37,8 @@ class Grid
       end
     end
   end
+
+  def print
+    "owo"
+  end
 end
