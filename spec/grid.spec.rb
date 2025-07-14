@@ -8,7 +8,7 @@ describe Grid do
       it "is nil for every space" do
         7.times do |column|
           6.times do |column_position|
-            value = grid.at(column, column_position)
+            value = grid.at_space(column, column_position)
             expect(value).to be nil
           end
         end
@@ -37,7 +37,7 @@ describe Grid do
 
       it "occupies second space in column" do
         grid_with_one_token.drop_token(token_color, column)
-        first_column = grid.column(column)
+        first_column = grid_with_one_token.column(column)
         expect(first_column).to eq ["red", "red", nil, nil, nil, nil]
       end
     end
@@ -51,7 +51,7 @@ describe Grid do
 
       it "occupies last space in column" do
         grid_with_five_tokens.drop_token(token_color, column)
-        first_column = grid.column(column)
+        first_column = grid_with_five_tokens.column(column)
         expect(first_column).to eq %w[red red red red red red]
       end
     end
