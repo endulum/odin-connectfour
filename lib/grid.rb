@@ -1,8 +1,16 @@
 class Grid
-  def initialize
-    empty_column = Array.new(6, nil)
+  attr_reader :column_count, :column_height
+
+  def initialize(column_count = 7, column_height = 6)
+    @column_count = column_count
+    @column_height = column_height
+    reset
+  end
+
+  def reset
+    empty_column = Array.new(column_height, nil)
     @columns = []
-    7.times { @columns.push(empty_column.dup) }
+    column_count.times { @columns.push(empty_column.dup) }
   end
 
   def column(index)
