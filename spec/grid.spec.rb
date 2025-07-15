@@ -81,11 +81,19 @@ describe Grid do
   end
 
   describe "printing the grid" do
+    def get_text(filename)
+      text = File
+             .read(filename)
+             .strip
+             .gsub("\\e", "\e")
+             .gsub("\\n", "\n")
+      text << "\n"
+      text
+    end
+
     context "when grid is empty" do
       it "prints an empty grid" do
-        text = <<~HEREDOC
-          \e[0;90;49m╓───────────────╖\e[0m\n\e[0;90;49m║ \e[0m             \e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m             \e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m             \e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m             \e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m             \e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m             \e[0;90;49m ║\e[0m\n\e[0;90;49m╚═══════════════╝\e[0m
-        HEREDOC
+        text = get_text("spec/sample_grids/empty.txt")
         expect { puts grid.print }.to output(text).to_stdout
       end
     end
@@ -99,9 +107,7 @@ describe Grid do
       end
 
       it "prints a grid with one red token and one yellow token" do
-        text = <<~HEREDOC
-          \e[0;90;49m╓───────────────╖\e[0m\n\e[0;90;49m║ \e[0m             \e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m             \e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m             \e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m             \e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m             \e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m\e[0;31;49m●\e[0m           \e[0;33;49m●\e[0m\e[0;90;49m ║\e[0m\n\e[0;90;49m╚═══════════════╝\e[0m
-        HEREDOC
+        text = get_text("spec/sample_grids/one-red-one-yellow.txt")
         expect { puts grid_with_tokens.print }.to output(text).to_stdout
       end
     end
@@ -115,9 +121,7 @@ describe Grid do
       end
 
       it "prints a grid with full red column and full yellow column" do
-        text = <<~HEREDOC
-          \e[0;90;49m╓───────────────╖\e[0m\n\e[0;90;49m║ \e[0m\e[0;31;49m●\e[0m           \e[0;33;49m●\e[0m\e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m\e[0;31;49m●\e[0m           \e[0;33;49m●\e[0m\e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m\e[0;31;49m●\e[0m           \e[0;33;49m●\e[0m\e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m\e[0;31;49m●\e[0m           \e[0;33;49m●\e[0m\e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m\e[0;31;49m●\e[0m           \e[0;33;49m●\e[0m\e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m\e[0;31;49m●\e[0m           \e[0;33;49m●\e[0m\e[0;90;49m ║\e[0m\n\e[0;90;49m╚═══════════════╝\e[0m
-        HEREDOC
+        text = get_text("spec/sample_grids/col-red-col-yellow.txt")
         expect { puts grid_with_columns.print }.to output(text).to_stdout
       end
     end
@@ -131,9 +135,7 @@ describe Grid do
       end
 
       it "prints a grid with full red row and full yellow row" do
-        text = <<~HEREDOC
-          \e[0;90;49m╓───────────────╖\e[0m\n\e[0;90;49m║ \e[0m             \e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m             \e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m             \e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m             \e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m\e[0;33;49m●\e[0m \e[0;33;49m●\e[0m \e[0;33;49m●\e[0m \e[0;33;49m●\e[0m \e[0;33;49m●\e[0m \e[0;33;49m●\e[0m \e[0;33;49m●\e[0m\e[0;90;49m ║\e[0m\n\e[0;90;49m║ \e[0m\e[0;31;49m●\e[0m \e[0;31;49m●\e[0m \e[0;31;49m●\e[0m \e[0;31;49m●\e[0m \e[0;31;49m●\e[0m \e[0;31;49m●\e[0m \e[0;31;49m●\e[0m\e[0;90;49m ║\e[0m\n\e[0;90;49m╚═══════════════╝\e[0m
-        HEREDOC
+        text = get_text("spec/sample_grids/row-red-row-yellow.txt")
         expect { puts grid_with_rows.print }.to output(text).to_stdout
       end
     end
