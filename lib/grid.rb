@@ -15,6 +15,10 @@ class Grid
     column_count.times { @columns.push(empty_column.dup) }
   end
 
+  def self.valid_token?(token)
+    String.colors.include?(token)
+  end
+
   def column(index)
     @columns[index]
   end
@@ -28,6 +32,8 @@ class Grid
   end
 
   def set_space(column_index, column_position, token)
+    return unless Grid.valid_token?(token)
+
     @columns[column_index][column_position] = token
   end
 
