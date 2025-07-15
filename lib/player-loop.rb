@@ -1,0 +1,2 @@
+class PlayerLoop
+end
