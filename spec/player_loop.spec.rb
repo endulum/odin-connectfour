@@ -31,7 +31,9 @@ describe PlayerLoop do
       end
 
       it "loops once with error" do
-        expect(player_loop).to receive(:puts).with("Input error: This column is full. Please select another column.")
+        expect(player_loop).to receive(:puts)
+          .with("Input error: This column is full. Please select another column.")
+          .once
         player_loop.play_turn
       end
     end
@@ -40,15 +42,18 @@ describe PlayerLoop do
       subject(:player_loop) { described_class.new("bob", :red, Grid.new) }
 
       before do
-        invalid_input = "owo"
+        invalid_input_string = "owo"
+        invalid_input_int = "69420"
         valid_input = "0"
         allow(player_loop).to receive(:input).and_return(
-          invalid_input, valid_input
+          invalid_input_string, invalid_input_int, valid_input
         )
       end
 
       it "loops once with error" do
-        expect(player_loop).to receive(:puts).with("Input error: Not a valid column. Please input an integer 0 to 6.")
+        expect(player_loop).to receive(:puts)
+          .with("Input error: Not a valid column. Please input an integer 0 to 6.")
+          .twice
         player_loop.play_turn
       end
     end
