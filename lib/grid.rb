@@ -15,20 +15,16 @@ class Grid
     column_count.times { @columns.push(empty_column.dup) }
   end
 
-  def self.valid_token?(token)
-    String.colors.include?(token)
-  end
-
   def column(index)
     @columns[index]
   end
 
-  def column_full?(index)
-    @columns[index].compact.length == @columns[index].length
-  end
-
   def at_space(column_index, column_position)
     @columns[column_index][column_position]
+  end
+
+  def self.valid_token?(token)
+    String.colors.include?(token)
   end
 
   def set_space(column_index, column_position, token)
@@ -37,7 +33,13 @@ class Grid
     @columns[column_index][column_position] = token
   end
 
+  def column_full?(index)
+    @columns[index].compact.length == @columns[index].length
+  end
+
   def drop_token(token, column_index)
+    return if column_full?(column_index)
+
     (0..5).each do |column_position|
       if at_space(column_index, column_position).nil?
         set_space(column_index, column_position, token)
