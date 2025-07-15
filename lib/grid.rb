@@ -1,3 +1,5 @@
+require "colorize"
+
 class Grid
   attr_reader :column_count, :column_height
 
@@ -39,6 +41,35 @@ class Grid
   end
 
   def print
-    "owo"
+    grid_string = "#{'╓───────────────╖'.colorize(:gray)}\n"
+    (@column_height - 1).downto(0) do |height|
+      grid_string += "#{row_string_from(height)}\n"
+      next unless height.zero?
+
+      grid_string += "╚═══════════════╝".colorize(:gray)
+    end
+    grid_string
+  end
+
+  private
+
+  def row_string_from(height)
+    row_string = "║ ".colorize(:gray)
+    @column_count.times do |column|
+      row_string += space_string_from(column, height)
+    end
+    row_string
+  end
+
+  def space_string_from(column, height)
+    space_string = ""
+
+    space = at_space(column, height)
+    space_string += space.nil? ? " " : "●".colorize(space)
+
+    is_last_space = column == @column_count - 1
+    space_string += is_last_space ? " ║".colorize(:gray) : " "
+
+    space_string
   end
 end
