@@ -50,7 +50,7 @@ describe PlayerLoop do
         )
       end
 
-      it "loops once with error" do
+      it "loops twice with error" do
         expect(player_loop).to receive(:puts)
           .with("Input error: Not a valid column. Please input an integer 0 to 6.")
           .twice
