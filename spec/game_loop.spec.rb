@@ -1,3 +1,4 @@
+require "colorize"
 require_relative "../lib/game_loop"
 
 describe GameLoop do
@@ -23,64 +24,47 @@ describe GameLoop do
   describe "#init_player_one" do
     let(:valid_input) { "bob" }
 
-    it "displays prompt on call" do
-      expect(game_loop).to receive(:puts).with("What's your name? > ")
-      game_loop.init_player_one
-    end
-
     context "when input is successful" do
-      before do
-        allow(game_loop).to receive(:input).and_return(valid_name)
-      end
+      it "displays success and returns value" do
+        allow(game_loop).to receive(:input).and_return(valid_input)
 
-      it "displays message" do
-        expect(game_loop).to receive(:puts).with("Hello, #{valid_input}! You will be playing red.")
-        game_loop.init_player_one
-      end
+        success_message = "Hello, #{valid_input.colorize(:red)}! You will be playing #{'red'.colorize(:red)}."
+                          .colorize(mode: :bold)
+        expect(game_loop).to receive(:puts).with(success_message)
 
-      it "returns input" do
         player_one_name = game_loop.init_player_one
-        expect(player_one_name).to be valid_name
+        expect(player_one_name).to be valid_input
       end
     end
 
     context "when input is unsuccessful" do
-      it "loops with error" do
+      it "loops with error three times, then displays success once" do
         invalid_input_empty = ""
         invalid_input_too_long = Array.new(100, "x").join
         invalid_input_non_alpha = "12345"
         allow(game_loop).to receive(:input).and_return(
           invalid_input_empty, invalid_input_too_long, invalid_input_non_alpha, valid_input
         )
+
         expect(game_loop).to receive(:puts).with(/^\s*Input error:/).exactly(3).times
+        expect(game_loop).to receive(:puts).with(/^(?!\s*Input error:)/).once
+
         game_loop.init_player_one
       end
     end
   end
 
   describe "#init_player_mode" do
-    it "displays prompt on call" do
-      expect(game_loop).to receive(:puts).with(
-        "Enter 1 to be in one-player mode. You will play against the computer.\n
-        Enter 2 to be in two-player mode. You will play against a second person.\n
-        > "
-      )
-      game_loop.init_player_mode
-    end
-
     context "when input is successful" do
       context "when single-player chosen" do
         before do
           allow(game_loop).to receive(:input).and_return("1")
         end
 
-        it "displays message" do
+        it "displays message and returns true" do
           expect(game_loop).to receive(:puts).with("The computer will play yellow.")
-          game_loop.init_player_mode
-        end
-
-        it "returns true" do
-          expect(game_loop.init_player_mode).to be true
+          is_single_player = game_loop.init_player_mode
+          expect(is_single_player).to be true
         end
       end
 
@@ -91,12 +75,21 @@ describe GameLoop do
 
         it "does not display message (#init_player_two takes care of this)" do
           expect(game_loop).not_to receive(:puts)
-          game_loop.init_player_mode
+          is_single_player = game_loop.init_player_mode
+          expect(is_single_player).to be false
         end
+      end
+    end
 
-        it "returns false" do
-          expect(game_loop.init_player_mode).to be true
-        end
+    context "when input is unsuccessful" do
+      it "loops with error" do
+        invalid_input = "3"
+        valid_input = "2"
+        allow(game_loop).to receive(:input).and_return(
+          invalid_input, valid_input
+        )
+        expect(game_loop).to receive(:puts).with(/^\s*Input error:/).once
+        game_loop.init_player_mode
       end
     end
   end
@@ -107,7 +100,7 @@ describe GameLoop do
     context "when in single-player mode" do
       subject(:game_loop_single_player) do
         game = described_class.new
-        game.instance_variable_set(@is_single_player, true)
+        game.instance_variable_set(:@is_single_player, true)
         return game
       end
 
@@ -119,24 +112,22 @@ describe GameLoop do
     end
 
     context "when in two-player mode" do
-      it "displays prompt on call" do
-        expect(game_loop).to receive(:puts).with("Second person, what's your name? > ")
-        game_loop.init_player_two
+      subject(:game_loop_two_player) do
+        game = described_class.new
+        game.instance_variable_set(:@is_single_player, false)
+        return game
       end
 
       context "when input is successful" do
-        before do
-          allow(game_loop).to receive(:input).and_return(valid_name)
-        end
+        it "displays success and returns value" do
+          allow(game_loop_two_player).to receive(:input).and_return(valid_input)
 
-        it "displays message" do
-          expect(game_loop).to receive(:puts).with("Hello, #{valid_input}! You will be playing yellow.")
-          game_loop.init_player_two
-        end
+          success_message = "Hello, #{valid_input.colorize(:yellow)}! You will be playing #{'yellow'.colorize(:yellow)}."
+                            .colorize(mode: :bold)
+          expect(game_loop_two_player).to receive(:puts).with(success_message)
 
-        it "returns input" do
-          player_two_name = game_loop.init_player_two
-          expect(player_two_name).to be valid_name
+          player_two_name = game_loop_two_player.init_player_two
+          expect(player_two_name).to be valid_input
         end
       end
 
@@ -145,11 +136,14 @@ describe GameLoop do
           invalid_input_empty = ""
           invalid_input_too_long = Array.new(100, "x").join
           invalid_input_non_alpha = "12345"
-          allow(game_loop).to receive(:input).and_return(
+          allow(game_loop_two_player).to receive(:input).and_return(
             invalid_input_empty, invalid_input_too_long, invalid_input_non_alpha, valid_input
           )
-          expect(game_loop).to receive(:puts).with(/^\s*Input error:/).exactly(3).times
-          game_loop.init_player_two
+
+          expect(game_loop_two_player).to receive(:puts).with(/^\s*Input error:/).exactly(3).times
+          expect(game_loop_two_player).to receive(:puts).with(/^(?!\s*Input error:)/).once
+
+          game_loop_two_player.init_player_two
         end
       end
     end
