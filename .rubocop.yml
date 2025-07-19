@@ -15,7 +15,7 @@ AllCops:
   NewCops: enable
 
 Metrics/BlockLength:
-  AllowedMethods: "describe"
+  AllowedMethods: ["describe", "context"]
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes

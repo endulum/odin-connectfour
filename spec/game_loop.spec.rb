@@ -1,57 +1,155 @@
 require_relative "../lib/game_loop"
 
 describe GameLoop do
-  describe "initializing the game" do
-    describe "inputting a name" do
-      context "when no name is given" do
-        it "loops once with error" do
-          #
-        end
+  subject(:game_loop) { described_class.new }
+
+  # Welcome to Connect Four
+
+  # What's your name? > bob
+  # Hello, bob! You will be playing red.
+
+  # Enter 1 to be in one-player mode. You will play against the computer.
+  # Enter 2 to be in two-player mode. You will play against a second person.
+  #
+  # > 1
+  # The computer will play yellow.
+  # [begin game]
+  #
+  # > 2
+  # Second person, what's your name? > alice
+  # Hello, alice! You will be playing yellow.
+  # [begin game]
+
+  describe "#init_player_one" do
+    let(:valid_input) { "bob" }
+
+    it "displays prompt on call" do
+      expect(game_loop).to receive(:puts).with("What's your name? > ")
+      game_loop.init_player_one
+    end
+
+    context "when input is successful" do
+      before do
+        allow(game_loop).to receive(:input).and_return(valid_name)
       end
 
-      context "when valid name is given" do
-        it "stops loop and does not error" do
-          #
-        end
+      it "displays message" do
+        expect(game_loop).to receive(:puts).with("Hello, #{valid_input}! You will be playing red.")
+        game_loop.init_player_one
+      end
+
+      it "returns input" do
+        player_one_name = game_loop.init_player_one
+        expect(player_one_name).to be valid_name
       end
     end
 
-    describe "inputting a color" do
-      context "when no color is given" do
-        it "loops once with error" do
-          #
+    context "when input is unsuccessful" do
+      it "loops with error" do
+        invalid_input_empty = ""
+        invalid_input_too_long = Array.new(100, "x").join
+        invalid_input_non_alpha = "12345"
+        allow(game_loop).to receive(:input).and_return(
+          invalid_input_empty, invalid_input_too_long, invalid_input_non_alpha, valid_input
+        )
+        expect(game_loop).to receive(:puts).with(/^\s*Input error:/).exactly(3).times
+        game_loop.init_player_one
+      end
+    end
+  end
+
+  describe "#init_player_mode" do
+    it "displays prompt on call" do
+      expect(game_loop).to receive(:puts).with(
+        "Enter 1 to be in one-player mode. You will play against the computer.\n
+        Enter 2 to be in two-player mode. You will play against a second person.\n
+        > "
+      )
+      game_loop.init_player_mode
+    end
+
+    context "when input is successful" do
+      context "when single-player chosen" do
+        before do
+          allow(game_loop).to receive(:input).and_return("1")
+        end
+
+        it "displays message" do
+          expect(game_loop).to receive(:puts).with("The computer will play yellow.")
+          game_loop.init_player_mode
+        end
+
+        it "returns true" do
+          expect(game_loop.init_player_mode).to be true
         end
       end
 
-      context "when input does not match a valid Colorize token" do
-        it "loops once with error" do
-          #
+      context "when two-player chosen" do
+        before do
+          allow(game_loop).to receive(:input).and_return("2")
         end
-      end
 
-      context "when input matches a valid Colorize token" do
-        it "stops loop and does not error" do
-          #
+        it "does not display message (#init_player_two takes care of this)" do
+          expect(game_loop).not_to receive(:puts)
+          game_loop.init_player_mode
+        end
+
+        it "returns false" do
+          expect(game_loop.init_player_mode).to be true
         end
       end
     end
+  end
 
-    describe "selecting 1-player or 2-player mode" do
-      context "when invalid input" do
-        it "loops once with error" do
-          #
+  describe "#init_player_two" do
+    let(:valid_input) { "alice" }
+
+    context "when in single-player mode" do
+      subject(:game_loop_single_player) do
+        game = described_class.new
+        game.instance_variable_set(@is_single_player, true)
+        return game
+      end
+
+      it "does nothing and automatically returns nil" do
+        expect(game_loop_single_player).not_to receive(:puts)
+        player_two_name = game_loop_single_player.init_player_two
+        expect(player_two_name).to be nil
+      end
+    end
+
+    context "when in two-player mode" do
+      it "displays prompt on call" do
+        expect(game_loop).to receive(:puts).with("Second person, what's your name? > ")
+        game_loop.init_player_two
+      end
+
+      context "when input is successful" do
+        before do
+          allow(game_loop).to receive(:input).and_return(valid_name)
+        end
+
+        it "displays message" do
+          expect(game_loop).to receive(:puts).with("Hello, #{valid_input}! You will be playing yellow.")
+          game_loop.init_player_two
+        end
+
+        it "returns input" do
+          player_two_name = game_loop.init_player_two
+          expect(player_two_name).to be valid_name
         end
       end
 
-      context "when valid input, 1-player mode" do
-        it "stops loop, does not error, and calls for 1p mode" do
-          #
-        end
-      end
-
-      context "when valid input, 2-player mode" do
-        it "stops loop, does not error, and calls for 2p mode" do
-          #
+      context "when input is unsuccessful" do
+        it "loops with error" do
+          invalid_input_empty = ""
+          invalid_input_too_long = Array.new(100, "x").join
+          invalid_input_non_alpha = "12345"
+          allow(game_loop).to receive(:input).and_return(
+            invalid_input_empty, invalid_input_too_long, invalid_input_non_alpha, valid_input
+          )
+          expect(game_loop).to receive(:puts).with(/^\s*Input error:/).exactly(3).times
+          game_loop.init_player_two
         end
       end
     end
