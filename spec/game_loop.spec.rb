@@ -46,8 +46,8 @@ describe GameLoop do
           invalid_input_empty, invalid_input_too_long, invalid_input_non_alpha, valid_input
         )
 
-        expect(game_loop).to receive(:puts).with(/^\s*Input error:/).exactly(3).times
-        expect(game_loop).to receive(:puts).with(/^(?!\s*Input error:)/).once
+        expect(game_loop).to receive(:puts).with(/\s*Input error:/).exactly(3).times
+        expect(game_loop).to receive(:puts).with(/(?!\s*Input error:)/).once
 
         game_loop.init_player_one
       end
@@ -62,7 +62,7 @@ describe GameLoop do
         end
 
         it "displays message and returns true" do
-          expect(game_loop).to receive(:puts).with("The computer will play yellow.")
+          expect(game_loop).to receive(:puts).with("The computer will play #{'yellow'.colorize(:yellow)}.".colorize(mode: :bold))
           is_single_player = game_loop.init_player_mode
           expect(is_single_player).to be true
         end
@@ -88,7 +88,7 @@ describe GameLoop do
         allow(game_loop).to receive(:input).and_return(
           invalid_input, valid_input
         )
-        expect(game_loop).to receive(:puts).with(/^\s*Input error:/).once
+        expect(game_loop).to receive(:puts).with(/\s*Input error:/).once
         game_loop.init_player_mode
       end
     end
@@ -140,8 +140,8 @@ describe GameLoop do
             invalid_input_empty, invalid_input_too_long, invalid_input_non_alpha, valid_input
           )
 
-          expect(game_loop_two_player).to receive(:puts).with(/^\s*Input error:/).exactly(3).times
-          expect(game_loop_two_player).to receive(:puts).with(/^(?!\s*Input error:)/).once
+          expect(game_loop_two_player).to receive(:puts).with(/\s*Input error:/).exactly(3).times
+          expect(game_loop_two_player).to receive(:puts).with(/(?!\s*Input error:)/).once
 
           game_loop_two_player.init_player_two
         end
