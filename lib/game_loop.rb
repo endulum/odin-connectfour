@@ -37,17 +37,15 @@ class GameLoop
   end
 
   def validate_name(input_value)
-    if input_value.empty?
-      puts "#{'Input error:'.bold} please enter a name!"
-      return nil
-    elsif input_value.length > 32
-      puts "#{'Input error:'.bold} that name is too long! 32 characters or less, please."
-      return nil
-    elsif !input_value.match(/^[A-Za-z ]+$/)
-      puts "#{'Input error:'.bold} your name should contain letters A-Z, a-z only."
-      return nil
-    end
-    input_value
+    error = if input_value.empty?
+              "please enter a name!"
+            elsif input_value.length > 32
+              "that name is too long! 32 characters or less, please."
+            elsif !/\A[A-Za-z ]+\z/.match?(input_value)
+              "your name should contain letters A-Z, a-z only."
+            end
+    puts "#{'Input error:'.bold} #{error}" if error
+    error ? nil : input
   end
 
   def validate_mode(input_value)
