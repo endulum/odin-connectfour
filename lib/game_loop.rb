@@ -10,7 +10,7 @@ class GameLoop
 
     puts "Enter 1 to be in 1-player mode against the computer.\nEnter 2 to be in 2-player mode against a second person."
       .bold
-    @is_single_player = init_player_mode
+    @is_single_player = single_player?
 
     @player_two_name = init_player_two
   end
@@ -22,7 +22,7 @@ class GameLoop
     name
   end
 
-  def init_player_mode
+  def single_player?
     mode = validate_mode(input) while mode.nil?
     puts "The computer will play #{'yellow'.yellow}.".bold if mode == "1"
     mode == "1"

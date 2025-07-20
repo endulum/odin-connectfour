@@ -53,7 +53,7 @@ describe GameLoop do
     end
   end
 
-  describe "#init_player_mode" do
+  describe "#single_player?" do
     context "when input is successful" do
       context "when single-player chosen" do
         before do
@@ -62,7 +62,7 @@ describe GameLoop do
 
         it "displays message and returns true" do
           expect(game_loop).to receive(:puts).with("The computer will play #{'yellow'.yellow}.".bold)
-          is_single_player = game_loop.init_player_mode
+          is_single_player = game_loop.single_player?
           expect(is_single_player).to be true
         end
       end
@@ -74,7 +74,7 @@ describe GameLoop do
 
         it "does not display message (#init_player_two takes care of this)" do
           expect(game_loop).not_to receive(:puts)
-          is_single_player = game_loop.init_player_mode
+          is_single_player = game_loop.single_player?
           expect(is_single_player).to be false
         end
       end
@@ -88,7 +88,7 @@ describe GameLoop do
           invalid_input, valid_input
         )
         expect(game_loop).to receive(:puts).with(/\s*Input error:/).once
-        game_loop.init_player_mode
+        game_loop.single_player?
       end
     end
   end
