@@ -28,8 +28,7 @@ describe GameLoop do
       it "displays success and returns value" do
         allow(game_loop).to receive(:input).and_return(valid_input)
 
-        success_message = "Hello, #{valid_input.colorize(:red)}! You will be playing #{'red'.colorize(:red)}."
-                          .colorize(mode: :bold)
+        success_message = "Hello, #{valid_input.red}! You will be playing #{'red'.red}.".bold
         expect(game_loop).to receive(:puts).with(success_message)
 
         player_one_name = game_loop.init_player_one
@@ -62,7 +61,7 @@ describe GameLoop do
         end
 
         it "displays message and returns true" do
-          expect(game_loop).to receive(:puts).with("The computer will play #{'yellow'.colorize(:yellow)}.".colorize(mode: :bold))
+          expect(game_loop).to receive(:puts).with("The computer will play #{'yellow'.yellow}.".bold)
           is_single_player = game_loop.init_player_mode
           expect(is_single_player).to be true
         end
@@ -122,8 +121,7 @@ describe GameLoop do
         it "displays success and returns value" do
           allow(game_loop_two_player).to receive(:input).and_return(valid_input)
 
-          success_message = "Hello, #{valid_input.colorize(:yellow)}! You will be playing #{'yellow'.colorize(:yellow)}."
-                            .colorize(mode: :bold)
+          success_message = "Hello, #{valid_input.yellow}! You will be playing #{'yellow'.yellow}.".bold
           expect(game_loop_two_player).to receive(:puts).with(success_message)
 
           player_two_name = game_loop_two_player.init_player_two

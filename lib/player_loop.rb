@@ -16,13 +16,13 @@ class PlayerLoop
 
   def to_column_choice(input_value)
     unless /^[0-6]$/.match?(input_value)
-      puts "Input error: Not a valid column. Please input an integer 0 to 6."
+      puts "#{'Input error:'.bold} Not a valid column. Please input an integer 0 to 6."
       return nil
     end
 
     column_choice = input_value.to_i
     if @grid.column_full?(column_choice)
-      puts "Input error: This column is full. Please select another column."
+      puts "#{'Input error:'.bold} This column is full. Please select another column."
       return nil
     end
 
@@ -30,7 +30,7 @@ class PlayerLoop
   end
 
   def input
-    print "\n#{@name.colorize(@color)} will drop their token in: ".colorize({ mode: bold })
+    print "\n#{@name.colorize(@color)} will drop their token in: ".bold
     gets.chomp
   end
 end

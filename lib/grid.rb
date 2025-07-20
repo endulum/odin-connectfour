@@ -49,12 +49,12 @@ class Grid
   end
 
   def print
-    grid_string = "#{'╓───────────────╖'.colorize(:gray)}\n"
+    grid_string = "#{'╓───────────────╖'.gray}\n"
     (@column_height - 1).downto(0) do |height|
       grid_string += "#{row_string_from(height)}\n"
       next unless height.zero?
 
-      grid_string += "╚═══════════════╝".colorize(:gray)
+      grid_string += "╚═══════════════╝".gray
     end
     grid_string
   end
@@ -62,7 +62,7 @@ class Grid
   private
 
   def row_string_from(height)
-    row_string = "║ ".colorize(:gray)
+    row_string = "║ ".gray
     @column_count.times do |column|
       row_string += space_string_from(column, height)
     end
@@ -76,7 +76,7 @@ class Grid
     space_string += space.nil? ? " " : "●".colorize(space)
 
     is_last_space = column == @column_count - 1
-    space_string += is_last_space ? " ║".colorize(:gray) : " "
+    space_string += is_last_space ? " ║".gray : " "
 
     space_string
   end
