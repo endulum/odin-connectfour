@@ -23,6 +23,14 @@ class Grid
     @columns[column_index][column_position]
   end
 
+  def each
+    @column_count.times do |current_column|
+      @column_height.times do |current_row|
+        yield at_space(current_column, current_row), current_column, current_row
+      end
+    end
+  end
+
   def self.valid_token?(token)
     String.colors.include?(token)
   end

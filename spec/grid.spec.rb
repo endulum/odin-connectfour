@@ -6,12 +6,7 @@ describe Grid do
   describe "accessing a space on the grid" do
     context "when grid is empty" do
       it "is nil for every space" do
-        7.times do |column|
-          6.times do |column_position|
-            value = grid.at_space(column, column_position)
-            expect(value).to be nil
-          end
-        end
+        grid.each { |cell| expect(cell).to be nil }
       end
     end
   end
