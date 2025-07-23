@@ -45,7 +45,7 @@ class GameLoop
               "your name should contain letters A-Z, a-z only."
             end
     puts "#{'Input error:'.bold} #{error}" if error
-    error ? nil : input
+    error ? nil : input_value
   end
 
   def validate_mode(input_value)
