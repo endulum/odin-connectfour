@@ -15,46 +15,65 @@ class Grid
     column_count.times { @columns.push(empty_column.dup) }
   end
 
-  def column(index)
-    @columns[index]
-  end
+  ## getting grid info
 
-  def at_space(column_index, column_position)
-    @columns[column_index][column_position]
+  def at(coords)
+    @columns[coords[0]][coords[1]]
+    # [0, 0] = left bottom corner
+    # [@column_count, @column_height] = right top corner
+    # [0, @column_height] = left top corner
+    # [@column_count, 0] = right bottom corner
   end
 
   def each
-    @column_count.times do |current_column|
-      @column_height.times do |current_row|
-        yield at_space(current_column, current_row), current_column, current_row
+    @column_count.times do |column_index|
+      @column_height.times do |row_index|
+        yield at([column_index, row_index]), [column_index, row_index]
+        # this.each do |value, coords|
       end
     end
   end
 
-  def self.valid_token?(token)
-    String.colors.include?(token)
+  def at_column(index)
+    @columns[index]
   end
 
-  def set_space(column_index, column_position, token)
+  def each_column
+    @column_count.times do |column_index|
+      yield at_column(column_index), column_index
+      # this.each do |column, index|
+    end
+  end
+
+  ## adding tokens to grid
+
+  def self.valid_token?(token)
+    String.colors.include?(token)
+    # tokens need to be Colorize symbols to allow printing
+  end
+
+  def set_space(coords, token)
     return unless Grid.valid_token?(token)
 
-    @columns[column_index][column_position] = token
+    @columns[coords[0]][coords[1]] = token
   end
 
   def column_full?(index)
-    @columns[index].compact.length == @columns[index].length
+    at_column(index).compact.length == at_column(index).length
   end
 
   def drop_token(token, column_index)
     return if column_full?(column_index)
 
-    (0..5).each do |column_position|
-      if at_space(column_index, column_position).nil?
-        set_space(column_index, column_position, token)
+    (0..5).each do |row_index|
+      if at([column_index, row_index]).nil?
+        set_space([column_index, row_index], token)
         break
       end
     end
   end
+
+  ## displaying grid
 
   def print
     grid_string = "#{'╓───────────────╖'.gray}\n"
@@ -80,7 +99,7 @@ class Grid
   def space_string_from(column, height)
     space_string = ""
 
-    space = at_space(column, height)
+    space = at([column, height])
     space_string += space.nil? ? " " : "●".colorize(space)
 
     is_last_space = column == @column_count - 1

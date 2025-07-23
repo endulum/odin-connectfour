@@ -3,10 +3,16 @@ require_relative "../lib/grid"
 describe Grid do
   subject(:grid) { described_class.new }
 
-  describe "accessing a space on the grid" do
+  describe "accessing grid info" do
     context "when grid is empty" do
       it "is nil for every space" do
         grid.each { |cell| expect(cell).to be nil }
+      end
+
+      it "has columns of all nil" do
+        grid.each_column do |column|
+          expect(column).to eq [nil, nil, nil, nil, nil, nil]
+        end
       end
     end
   end
@@ -18,7 +24,7 @@ describe Grid do
     context "when a column is empty" do
       it "occupies first space in column" do
         expect { grid.drop_token(color, column) }
-          .to change { grid.column(column) }
+          .to change { grid.at_column(column) }
           .from([nil, nil, nil, nil, nil, nil])
           .to([color, nil, nil, nil, nil, nil])
       end
@@ -33,7 +39,7 @@ describe Grid do
 
       it "occupies second space in column" do
         expect { grid_with_one_token.drop_token(color, column) }
-          .to change { grid_with_one_token.column(column) }
+          .to change { grid_with_one_token.at_column(column) }
           .from([color, nil, nil, nil, nil, nil])
           .to([color, color, nil, nil, nil, nil])
       end
@@ -48,7 +54,7 @@ describe Grid do
 
       it "occupies last space in column" do
         expect { grid_with_five_tokens.drop_token(color, column) }
-          .to change { grid_with_five_tokens.column(column) }
+          .to change { grid_with_five_tokens.at_column(column) }
           .from([color, color, color, color, color, nil])
           .to([color, color, color, color, color, color])
       end
@@ -63,14 +69,14 @@ describe Grid do
 
       it "does nothing to column" do
         expect { grid_with_full_column.drop_token(color, column) }
-          .not_to(change { grid_with_full_column.column(column) })
+          .not_to(change { grid_with_full_column.at_column(column) })
       end
     end
 
     context "when token is not a valid Colorize symbol" do
       it "does nothing to column" do
         expect { grid.drop_token("red", column) }
-          .not_to(change { grid.column(column) })
+          .not_to(change { grid.at_column(column) })
       end
     end
   end
