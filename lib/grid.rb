@@ -65,12 +65,15 @@ class Grid
   def drop_token(token, column_index)
     return if column_full?(column_index)
 
+    row = 0
     (0..5).each do |row_index|
-      if at([column_index, row_index]).nil?
-        set_space([column_index, row_index], token)
-        break
-      end
+      next unless at([column_index, row_index]).nil?
+
+      set_space([column_index, row_index], token)
+      row = row_index
+      break
     end
+    [column_index, row]
   end
 
   ## displaying grid
@@ -85,6 +88,37 @@ class Grid
     end
     grid_string
   end
+
+  ## determining winning move
+
+  @@directions_matrix = {
+    vertical: { south: [1, 0], north: [-1, 0] },
+    horizontal: { east: [0, 1], west: [0, -1] },
+    backward: { southeast: [1, 1], northwest: [-1, -1] },
+    forward: { southwest: [1, -1], northeast: [-1, 1] }
+  }
+
+  def winning_move?(coords, token)
+    is_match = false
+    @@directions_matrix.each_value do |axis|
+      matches = 1
+      axis.each_value do |direction|
+        cell_reference = [coords[1], coords[0]]
+        test_cell = at [cell_reference[1], cell_reference[0]]
+
+        while test_cell == token
+          cell_reference[0] += direction[0]
+          cell_reference[1] += direction[1]
+          test_cell = at [cell_reference[1], cell_reference[0]]
+          matches += 1 unless test_cell != token
+        end
+      end
+      is_match = matches >= 4
+      break if is_match
+    end
+    is_match
+  end
+  # https://stackoverflow.com/a/63446171
 
   private
 

@@ -145,4 +145,30 @@ describe Grid do
       end
     end
   end
+
+  describe "determining winning move" do
+    context "test grid #1" do
+      it "should not win until there is a four-in-a-row" do
+        moves = [
+          [:red, 2],
+          [:red, 3],
+          [:red, 4],
+          [:yellow, 2],
+          [:red, 2],
+          [:yellow, 2],
+          [:yellow, 2]
+        ]
+
+        moves.each do |token, column|
+          coords = grid.drop_token(token, column)
+          expect(grid.winning_move?(coords, token)).to be false
+        end
+
+        puts grid.print
+
+        coords = grid.drop_token(:red, 5)
+        expect(grid.winning_move?(coords, :red)).to be true
+      end
+    end
+  end
 end
