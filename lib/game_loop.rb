@@ -1,18 +1,28 @@
 require "colorize"
-require "pry-byebug"
+require_relative "player_loop"
+require_relative "grid"
 
 class GameLoop
+  attr_reader :grid, :whose_turn
+
   def initialize
+    @grid = Grid.new
   end
 
   def set_players
-    @player_one_name = init_player_one
+    player_one_name = init_player_one
+    @player_one = PlayerLoop.new(player_one_name, :red, @grid)
 
     puts "Enter 1 to be in 1-player mode against the computer.\nEnter 2 to be in 2-player mode against a second person."
       .bold
     @is_single_player = single_player?
 
-    @player_two_name = init_player_two
+    player_two_name = init_player_two
+    @player_two = @is_single_player ? nil : PlayerLoop.new(player_two_name, :yellow, @grid)
+  end
+
+  def switch_whose_turn
+    @whose_turn = @whose_turn == @player_one ? @player_two : @player_one
   end
 
   def init_player_one
@@ -35,6 +45,8 @@ class GameLoop
     puts "Hello, #{name.yellow}! You will be playing #{'yellow'.yellow}.".bold
     name
   end
+
+  private
 
   def validate_name(input_value)
     error = if input_value.empty?
