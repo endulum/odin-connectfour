@@ -62,4 +62,11 @@ class Grid
       # usage: this.each_row do |row, index| ...
     end
   end
+
+  def each_row_reverse
+    (@row_count - 1).downto(0) do |row_index|
+      yield at_row(row_index), row_index
+      # usage: this.each_row_reverse do |row, index| ...
+    end
+  end
 end
