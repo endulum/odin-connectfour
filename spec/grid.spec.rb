@@ -1,173 +1,152 @@
 require_relative "../lib/grid"
 
 describe Grid do
-  subject(:grid) { described_class.new }
+  subject(:grid) { described_class.new(4, 4) }
 
-  describe "accessing grid info" do
-    context "when grid is empty" do
-      it "is nil for every space" do
-        grid.each { |cell| expect(cell).to be nil }
+  describe "#set_value_at" do
+    it "sets a value using x,y coordinates" do
+      grid.column_count.times do |col|
+        grid.row_count.times do |row|
+          grid.set_value_at(col, row, :color)
+        end
       end
 
-      it "has columns of all nil" do
-        grid.each_column do |column|
-          expect(column).to eq [nil, nil, nil, nil, nil, nil]
+      grid.column_count.times do |col|
+        grid.row_count.times do |row|
+          expect(grid.at(col, row)).to eq :color
         end
       end
     end
   end
 
-  describe "dropping a token into a column" do
-    color = :red
-    column = 0
-
-    context "when a column is empty" do
-      it "occupies first space in column" do
-        expect { grid.drop_token(color, column) }
-          .to change { grid.at_column(column) }
-          .from([nil, nil, nil, nil, nil, nil])
-          .to([color, nil, nil, nil, nil, nil])
+  describe "#each" do
+    before do
+      grid.column_count.times do |col|
+        grid.row_count.times do |row|
+          grid.set_value_at(col, row, :color)
+        end
       end
     end
 
-    context "when a column has a token" do
-      subject(:grid_with_one_token) do
-        grid = described_class.new
-        grid.drop_token(color, column)
-        return grid
-      end
-
-      it "occupies second space in column" do
-        expect { grid_with_one_token.drop_token(color, column) }
-          .to change { grid_with_one_token.at_column(column) }
-          .from([color, nil, nil, nil, nil, nil])
-          .to([color, color, nil, nil, nil, nil])
-      end
-    end
-
-    context "when a column is nearly full" do
-      subject(:grid_with_five_tokens) do
-        grid = described_class.new
-        5.times { grid.drop_token(color, column) }
-        return grid
-      end
-
-      it "occupies last space in column" do
-        expect { grid_with_five_tokens.drop_token(color, column) }
-          .to change { grid_with_five_tokens.at_column(column) }
-          .from([color, color, color, color, color, nil])
-          .to([color, color, color, color, color, color])
-      end
-    end
-
-    context "when a column is full" do
-      subject(:grid_with_full_column) do
-        grid = described_class.new
-        6.times { grid.drop_token(color, column) }
-        return grid
-      end
-
-      it "does nothing to column" do
-        expect { grid_with_full_column.drop_token(color, column) }
-          .not_to(change { grid_with_full_column.at_column(column) })
-      end
-    end
-
-    context "when token is not a valid Colorize symbol" do
-      it "does nothing to column" do
-        expect { grid.drop_token("red", column) }
-          .not_to(change { grid.at_column(column) })
-      end
+    it "iterates through each cell in the grid" do
+      values = grid.map
+      expect(values).to eq Array.new(16).fill(:color)
     end
   end
 
-  describe "printing the grid" do
-    def get_text(filename)
-      text = File
-             .read(filename)
-             .strip
-             .gsub("\\e", "\e")
-             .gsub("\\n", "\n")
-      text << "\n"
-      text
+  describe "axial enumerables" do
+    subject(:grid) do
+      grid = described_class.new(4, 4)
+      grid.column_count.times do |col|
+        # horizontally "striping" the grid with colors
+        color = if col % 3 == 0
+                  :blue
+                else
+                  col.even? ? :red : :yellow
+                end
+        grid.row_count.times do |row|
+          grid.set_value_at(col, row, color)
+        end
+      end
+      return grid
     end
 
-    context "when grid is empty" do
-      it "prints an empty grid" do
-        text = get_text("spec/sample_grids/empty.txt")
-        expect { puts grid.print }.to output(text).to_stdout
-        puts text
-      end
-    end
-
-    context "when grid has one red token and one yellow token" do
-      subject(:grid_with_tokens) do
-        grid = described_class.new
-        grid.drop_token(:red, 0)
-        grid.drop_token(:yellow, grid.column_count - 1)
-        return grid
-      end
-
-      it "prints a grid with one red token and one yellow token" do
-        text = get_text("spec/sample_grids/one-red-one-yellow.txt")
-        expect { puts grid_with_tokens.print }.to output(text).to_stdout
-        puts text
-      end
-    end
-
-    context "when grid has full red column and full yellow column" do
-      subject(:grid_with_columns) do
-        grid = described_class.new
-        6.times { grid.drop_token(:red, 0) }
-        6.times { grid.drop_token(:yellow, grid.column_count - 1) }
-        return grid
-      end
-
-      it "prints a grid with full red column and full yellow column" do
-        text = get_text("spec/sample_grids/col-red-col-yellow.txt")
-        expect { puts grid_with_columns.print }.to output(text).to_stdout
-        puts text
-      end
-    end
-
-    context "when grid has full red row and full yellow row" do
-      subject(:grid_with_rows) do
-        grid = described_class.new
-        grid.column_count.times { |column| grid.drop_token(:red, column) }
-        grid.column_count.times { |column| grid.drop_token(:yellow, column) }
-        return grid
-      end
-
-      it "prints a grid with full red row and full yellow row" do
-        text = get_text("spec/sample_grids/row-red-row-yellow.txt")
-        expect { puts grid_with_rows.print }.to output(text).to_stdout
-        puts text
-      end
-    end
-  end
-
-  describe "determining winning move" do
-    context "test grid #1" do
-      it "should not win until there is a four-in-a-row" do
-        moves = [
-          [:red, 2],
-          [:red, 3],
-          [:red, 4],
-          [:yellow, 2],
-          [:red, 2],
-          [:yellow, 2],
-          [:yellow, 2]
+    describe "#each_column" do
+      it "iterates through columns of the grid" do
+        columns = []
+        expected_columns = [
+          [:blue] * 4,
+          [:yellow] * 4,
+          [:red] * 4,
+          [:blue] * 4
         ]
 
-        moves.each do |token, column|
-          coords = grid.drop_token(token, column)
-          expect(grid.winning_move?(coords, token)).to be false
-        end
+        grid.each_column { |column| columns.push(column) }
+        expect(columns).to eq expected_columns
+      end
+    end
 
-        puts grid.print
+    describe "#each_row" do
+      it "iterates through rows of the grid" do
+        rows = []
+        expected_rows = [%i[blue yellow red blue]] * 4
 
-        coords = grid.drop_token(:red, 5)
-        expect(grid.winning_move?(coords, :red)).to be true
+        grid.each_row { |row| rows.push(row) }
+        expect(rows).to eq expected_rows
+      end
+    end
+  end
+
+  describe "#match_at?" do
+    describe "horizontal matching" do
+      subject(:grid) do
+        grid = described_class.new(4, 4)
+        # horizontal row of three
+        grid.set_value_at(0, 0, :red)
+        grid.set_value_at(1, 0, :red)
+        grid.set_value_at(2, 0, :red)
+        return grid
+      end
+
+      it "matches" do
+        expect { grid.set_value_at(3, 0, :red) }
+          .to change { grid.match_at?([0, 0], :red, 4) }
+          .from(false)
+          .to(true)
+      end
+    end
+
+    describe "vertical matching" do
+      subject(:grid) do
+        grid = described_class.new(4, 4)
+        # vertical row of three
+        grid.set_value_at(0, 0, :red)
+        grid.set_value_at(0, 1, :red)
+        grid.set_value_at(0, 2, :red)
+        return grid
+      end
+
+      it "matches" do
+        expect { grid.set_value_at(0, 3, :red) }
+          .to change { grid.match_at?([0, 0], :red, 4) }
+          .from(false)
+          .to(true)
+      end
+    end
+
+    describe "forward-diagonal matching" do
+      subject(:grid) do
+        grid = described_class.new(4, 4)
+        # forward diagonal row of three
+        grid.set_value_at(0, 0, :red)
+        grid.set_value_at(1, 1, :red)
+        grid.set_value_at(2, 2, :red)
+        return grid
+      end
+
+      it "matches" do
+        expect { grid.set_value_at(3, 3, :red) }
+          .to change { grid.match_at?([0, 0], :red, 4) }
+          .from(false)
+          .to(true)
+      end
+    end
+
+    describe "backward-diagonal matching" do
+      subject(:grid) do
+        grid = described_class.new(4, 4)
+        # backward diagonal row of three
+        grid.set_value_at(0, 3, :red)
+        grid.set_value_at(1, 2, :red)
+        grid.set_value_at(2, 1, :red)
+        return grid
+      end
+
+      it "matches" do
+        expect { grid.set_value_at(3, 0, :red) }
+          .to change { grid.match_at?([0, 3], :red, 4) }
+          .from(false)
+          .to(true)
       end
     end
   end
