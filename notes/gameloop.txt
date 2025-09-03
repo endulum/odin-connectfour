@@ -1,0 +1,33 @@
+-
+
+Welcome to Connect Four
+Enter "load" to load a saved game.
+Enter "new" to play a new game.
+>
+
+-
+
+What is your name? > bob
+Hello, bob. You will be playing red.
+
+-
+
+Enter "1p" to play against the computer.
+Enter "2p" to play against a second player.
+> 
+
+-
+
+> 1p
+The computer will play yellow.
+[ begin game ]
+
+-
+
+> 2p
+Second player, what is your name? > alice
+Hello, alice. You will be playing yellow.
+[ begin game ]
+
+-
+
