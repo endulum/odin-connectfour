@@ -15,7 +15,7 @@ module PlayerInit
   def init_play_mode
     loop do
       mode = Prompt.get_input(
-        "Enter '1p' to play against the computer.\n Enter '2p' to play against a second person.\n> ".bold
+        "Enter '1p' to play against the computer.\nEnter '2p' to play against a second person.\n> ".bold
       )
       return mode if valid_mode?(mode)
     end
