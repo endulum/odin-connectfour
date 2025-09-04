@@ -126,7 +126,7 @@ describe GameLoop do
 
           it "works" do
             expect(game).to receive(:puts).at_least(:once)
-            game.init
+            game.init_players
             expect(game.player_one).to eq({ name: player_one_name, color: :red })
             expect(game.play_mode).to eq "1p"
             expect(game.player_two).to eq({ name: "The Computer", color: :yellow })
@@ -146,7 +146,7 @@ describe GameLoop do
 
           it "works" do
             expect(game).to receive(:puts).at_least(:once)
-            game.init
+            game.init_players
             expect(game.player_one).to eq({ name: player_one_name, color: :red })
             expect(game.play_mode).to eq "2p"
             expect(game.player_two).to eq({ name: player_two_name, color: :yellow })

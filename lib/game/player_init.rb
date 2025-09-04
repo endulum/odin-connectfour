@@ -36,7 +36,7 @@ module PlayerInit
     end
   end
 
-  def init
+  def init_players
     @player_one = init_player_one
     @play_mode = init_play_mode
     @player_two = @play_mode == "1p" ? init_cpu_player : init_player_two
