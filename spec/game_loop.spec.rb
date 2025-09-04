@@ -125,6 +125,7 @@ describe GameLoop do
           end
 
           it "works" do
+            expect(game).to receive(:puts).at_least(:once)
             game.driver_init
             expect(game.player_one).to eq({ name: player_one_name, color: :red })
             expect(game.play_mode).to eq "1p"
@@ -144,6 +145,7 @@ describe GameLoop do
           end
 
           it "works" do
+            expect(game).to receive(:puts).at_least(:once)
             game.driver_init
             expect(game.player_one).to eq({ name: player_one_name, color: :red })
             expect(game.play_mode).to eq "2p"
