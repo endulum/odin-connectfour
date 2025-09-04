@@ -112,6 +112,45 @@ describe GameLoop do
           game.init_player_two
         end
       end
+
+      describe "#driver_init" do
+        context "when 1p mode selected" do
+          player_one_name = "bob"
+          play_mode = "1p"
+
+          before do
+            allow(Prompt).to receive(:get_input).and_return(
+              player_one_name, play_mode
+            )
+          end
+
+          it "works" do
+            game.driver_init
+            expect(game.player_one).to eq({ name: player_one_name, color: :red })
+            expect(game.play_mode).to eq "1p"
+            expect(game.player_two).to eq({ name: "The Computer", color: :yellow })
+          end
+        end
+
+        context "when 2p mode selected" do
+          player_one_name = "bob"
+          play_mode = "2p"
+          player_two_name = "alice"
+
+          before do
+            allow(Prompt).to receive(:get_input).and_return(
+              player_one_name, play_mode, player_two_name
+            )
+          end
+
+          it "works" do
+            game.driver_init
+            expect(game.player_one).to eq({ name: player_one_name, color: :red })
+            expect(game.play_mode).to eq "2p"
+            expect(game.player_two).to eq({ name: player_two_name, color: :yellow })
+          end
+        end
+      end
     end
 
     # the init driver script:
