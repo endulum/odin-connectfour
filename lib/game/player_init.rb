@@ -1,10 +1,7 @@
-require_relative "prompt"
-require "colorize"
+require_relative "../prompt"
 
-# control of gameplay
-class GameLoop
-  attr_reader :player_one, :player_two, :play_mode
-
+# initializing player one, player two, and player mode by input
+module PlayerInit
   def init_player_one
     loop do
       name = Prompt.get_input("What is your name? > ")
@@ -39,7 +36,7 @@ class GameLoop
     end
   end
 
-  def driver_init
+  def init
     @player_one = init_player_one
     @play_mode = init_play_mode
     @player_two = @play_mode == "1p" ? init_cpu_player : init_player_two
