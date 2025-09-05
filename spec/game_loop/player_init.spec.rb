@@ -1,5 +1,5 @@
-require_relative "../lib/game_loop"
-require_relative "../lib/prompt"
+require_relative "../../lib/game/game_loop"
+require_relative "../../lib/prompt"
 require "colorize"
 
 describe GameLoop do
@@ -113,7 +113,7 @@ describe GameLoop do
         end
       end
 
-      describe "#driver_init" do
+      describe "#init" do
         context "when 1p mode selected" do
           player_one_name = "bob"
           play_mode = "1p"
@@ -126,7 +126,7 @@ describe GameLoop do
 
           it "works" do
             expect(game).to receive(:puts).at_least(:once)
-            game.driver_init
+            game.init_players
             expect(game.player_one).to eq({ name: player_one_name, color: :red })
             expect(game.play_mode).to eq "1p"
             expect(game.player_two).to eq({ name: "The Computer", color: :yellow })
@@ -146,7 +146,7 @@ describe GameLoop do
 
           it "works" do
             expect(game).to receive(:puts).at_least(:once)
-            game.driver_init
+            game.init_players
             expect(game.player_one).to eq({ name: player_one_name, color: :red })
             expect(game.play_mode).to eq "2p"
             expect(game.player_two).to eq({ name: player_two_name, color: :yellow })
@@ -154,11 +154,5 @@ describe GameLoop do
         end
       end
     end
-
-    # the init driver script:
-    # invoke init_player_one
-    # invoke init_play_mode
-    # based on play_mode, either invoke init_cpu_player or init_player_two
-    # ensure that GameLoop@player_one, @player_two, @play_mode are correctly defined
   end
 end
