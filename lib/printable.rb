@@ -19,13 +19,13 @@ module Printable
   private
 
   def row_string_from(row)
-    row_spaces = ["║ ".gray]
+    row_spaces = ["║".gray]
 
     row.each do |token|
-      row_spaces.push token.nil? ? "  " : "● ".colorize(token)
+      row_spaces.push token.nil? ? " " : "●".colorize(token)
     end
 
     row_spaces.push "║".gray
-    row_spaces.join
+    row_spaces.join(" ")
   end
 end
