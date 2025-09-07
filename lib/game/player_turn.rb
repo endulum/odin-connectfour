@@ -32,6 +32,13 @@ module PlayerTurn
     # general method for printing board and latest move
   end
 
+  def prompt_computer_move
+    loop do
+      column = rand(0..6)
+      return column if valid_column?(column)
+    end
+  end
+
   def prompt_player_move
     text = build_prompt_player_text
     loop do
