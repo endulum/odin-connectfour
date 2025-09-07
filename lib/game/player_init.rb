@@ -2,6 +2,8 @@ require_relative "../prompt"
 
 # initializing player one, player two, and player mode by input
 module PlayerInit
+  attr_reader :player_one, :play_mode, :player_two
+
   def init_player_one
     loop do
       name = Prompt.get_input("What is your name? > ")
