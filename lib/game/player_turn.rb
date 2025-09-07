@@ -16,12 +16,20 @@ module PlayerTurn
     if @whose_turn == @player_two && @play_mode == "1p"
       play_computer_move
     else
-      prompt_player_move
+      play_player_move
     end
   end
 
   def play_computer_move
     #
+  end
+
+  def play_player_move
+    #
+  end
+
+  def play_move
+    # general method for printing board and latest move
   end
 
   def prompt_player_move
