@@ -10,7 +10,7 @@ describe GameLoop do
     return game
   end
 
-  define "#take_turn" do
+  describe "#take_turn" do
     context "when it is nil" do
       it "sets @whose_turn to @player_one" do
         game.take_turn
