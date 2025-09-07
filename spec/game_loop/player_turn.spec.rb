@@ -50,4 +50,46 @@ describe GameLoop do
       end
     end
   end
+
+  describe "#call_move" do
+    context "when it is player one's turn" do
+      before do
+        player_one = game.instance_variable_get(:@player_one)
+        game.instance_variable_set(:@whose_turn, player_one)
+      end
+
+      it "calls #prompt_player_move" do
+        expect(game).to receive(:prompt_player_move)
+        game.call_move
+      end
+    end
+
+    context "when it is player two's turn, and mode is 1p" do
+      before do
+        player_two = { name: "The Computer", color: :yellow }
+        game.instance_variable_set(:@player_two, player_two)
+        game.instance_variable_set(:@play_mode, "1p")
+        game.instance_variable_set(:@whose_turn, player_two)
+      end
+
+      it "calls #play_computer_move" do
+        expect(game).to receive(:play_computer_move)
+        game.call_move
+      end
+    end
+
+    context "when it is player two's turn, and mode is 2p" do
+      before do
+        player_two = { name: "alice", color: :yellow }
+        game.instance_variable_set(:@player_two, player_two)
+        game.instance_variable_set(:@play_mode, "2p")
+        game.instance_variable_set(:@whose_turn, player_two)
+      end
+
+      it "calls #prompt_player_move" do
+        expect(game).to receive(:prompt_player_move)
+        game.call_move
+      end
+    end
+  end
 end

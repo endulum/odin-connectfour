@@ -11,4 +11,20 @@ module PlayerTurn
                     @whose_turn == @player_one ? @player_two : @player_one
                   end
   end
+
+  def call_move
+    if @whose_turn == @player_two && @play_mode == "1p"
+      play_computer_move
+    else
+      prompt_player_move
+    end
+  end
+
+  def play_computer_move
+    #
+  end
+
+  def prompt_player_move
+    #
+  end
 end
