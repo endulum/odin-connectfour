@@ -59,7 +59,8 @@ describe GameLoop do
       end
 
       it "calls #prompt_player_move" do
-        expect(game).to receive(:play_player_move)
+        expect(game).to receive(:play_move)
+        expect(game).to receive(:prompt_player_move)
         game.call_move
       end
     end
@@ -73,7 +74,8 @@ describe GameLoop do
       end
 
       it "calls #play_computer_move" do
-        expect(game).to receive(:play_computer_move)
+        expect(game).to receive(:play_move)
+        expect(game).to receive(:prompt_computer_move)
         game.call_move
       end
     end
@@ -87,7 +89,8 @@ describe GameLoop do
       end
 
       it "calls #prompt_player_move" do
-        expect(game).to receive(:play_player_move)
+        expect(game).to receive(:play_move)
+        expect(game).to receive(:prompt_player_move)
         game.call_move
       end
     end
