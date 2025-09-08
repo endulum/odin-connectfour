@@ -156,8 +156,8 @@ describe ConnectFourBoard do
     context "when board is empty" do
       it "prints an empty grid" do
         text = get_text("spec/sample_grids/empty.txt")
-        expect { puts board.print }.to output(text).to_stdout
         # puts text
+        expect { puts board.print }.to output(text).to_stdout
       end
     end
 
@@ -169,8 +169,8 @@ describe ConnectFourBoard do
 
       it "prints a grid with one red token and one yellow token" do
         text = get_text("spec/sample_grids/one-red-one-yellow.txt")
-        expect { puts board.print }.to output(text).to_stdout
         # puts text
+        expect { puts board.print }.to output(text).to_stdout
       end
     end
 
@@ -182,8 +182,8 @@ describe ConnectFourBoard do
 
       it "prints a grid with full red column and full yellow column" do
         text = get_text("spec/sample_grids/col-red-col-yellow.txt")
-        expect { puts board.print }.to output(text).to_stdout
         # puts text
+        expect { puts board.print }.to output(text).to_stdout
       end
     end
 
@@ -195,8 +195,8 @@ describe ConnectFourBoard do
 
       it "prints a grid with full red row and full yellow row" do
         text = get_text("spec/sample_grids/row-red-row-yellow.txt")
-        expect { puts board.print }.to output(text).to_stdout
         # puts text
+        expect { puts board.print }.to output(text).to_stdout
       end
     end
   end
